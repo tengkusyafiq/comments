@@ -16,18 +16,19 @@ class CommentService
      */
     public function store(Request $request)
     {
-        // If guest commenting is turned off, authorize this action.
-        if (Config::get('comments.guest_commenting') == false) {
-            Gate::authorize('create-comment', Comment::class);
-        }
-
-        // Define guest rules if user is not logged in.
-        if (!Auth::check()) {
-            $guest_rules = [
-                'guest_name' => 'required|string|max:255',
-                'guest_email' => 'required|string|email|max:255',
-            ];
-        }
+//        // If guest commenting is turned off, authorize this action.
+//        if (Config::get('comments.guest_commenting') == false) {
+//            Gate::authorize('create-comment', Comment::class);
+//        }
+//
+//        // Define guest rules if user is not logged in.
+//        if (!Auth::check()) {
+//            $guest_rules = [
+//                'guest_name' => 'required|string|max:255',
+//                'guest_email' => 'required|string|email|max:255',
+//            ];
+//        }
+        $guest_rules = null;
 
         // Merge guest rules, if any, with normal validation rules.
         Validator::make($request->all(), array_merge($guest_rules ?? [], [
@@ -41,12 +42,13 @@ class CommentService
         $commentClass = Config::get('comments.model');
         $comment = new $commentClass;
 
-        if (!Auth::check()) {
-            $comment->guest_name = $request->guest_name;
-            $comment->guest_email = $request->guest_email;
-        } else {
-            $comment->commenter()->associate(Auth::user());
-        }
+//        if (!Auth::check()) {
+//            $comment->guest_name = $request->guest_name;
+//            $comment->guest_email = $request->guest_email;
+//        } else {
+//            $comment->commenter()->associate(Auth::user());
+//        }
+        $comment->commenter()->associate(Auth::user());
 
         $comment->commentable()->associate($model);
         $comment->comment = $request->message;
