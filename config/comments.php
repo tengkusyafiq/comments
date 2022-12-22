@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Developer's note:
+ * We are using the package "laravelista/comments" to handle comments.
+ * We will be using our own controller to handle the comment CRUD, by extending the package's controller.
+ * We will be using our own policy.
+ * We will not be using comment approval, guest commenting.
+ * We will be using soft delete.
+ */
 return [
 
     /**
@@ -65,7 +72,7 @@ return [
      *
      * Comments will be soft deleted using laravels "softDeletes" trait.
      */
-    'soft_deletes' => false,
+    'soft_deletes' => true,
 
     /**
      * Enable/disable the package provider to load migrations.
