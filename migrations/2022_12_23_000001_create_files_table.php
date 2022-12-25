@@ -24,6 +24,7 @@ class CreateFilesTable extends Migration
             $table->unsignedBigInteger('file_size')->nullable()->default(0);
             $table->tinyInteger('status')->default(0);
             $table->unsignedBigInteger('tenant_id')->nullable()->index();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
