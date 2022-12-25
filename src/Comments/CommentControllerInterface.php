@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravelista\Comments;
+namespace Laravelista\Comments\Comments;
 
 use Illuminate\Http\Request;
 

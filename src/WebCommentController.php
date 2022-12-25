@@ -5,6 +5,9 @@ namespace Laravelista\Comments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Laravelista\Comments\Comments\Comment;
+use Laravelista\Comments\Comments\CommentController;
+use Laravelista\Comments\Comments\CommentService;
 
 class WebCommentController extends CommentController
 {

@@ -92,7 +92,7 @@ php artisan migrate
 Add the `Commenter` trait to your User model so that you can retrieve the comments for a user:
 
 ```php
-use Laravelista\Comments\Commenter;
+use Laravelista\Comments\Comments\Commenter;
 
 class User extends Authenticatable
 {
@@ -106,7 +106,7 @@ class User extends Authenticatable
 Add the `Commentable` trait to the model for which you want to enable comments for:
 
 ```php
-use Laravelista\Comments\Commentable;
+use Laravelista\Comments\Comments\Commentable;
 
 class Product extends Model
 {
@@ -218,9 +218,9 @@ You can configure the maximum indentation level like so:
 
 This package fires events to let you know when things happen.
 
-- `Laravelista\Comments\Events\CommentCreated`
-- `Laravelista\Comments\Events\CommentUpdated`
-- `Laravelista\Comments\Events\CommentDeleted`
+- `Laravelista\Comments\Comments\Events\CommentCreated`
+- `Laravelista\Comments\Comments\Events\CommentUpdated`
+- `Laravelista\Comments\Comments\Events\CommentDeleted`
 
 
 ## REST API
@@ -228,10 +228,10 @@ This package fires events to let you know when things happen.
 To change the controller or the routes, see the config.
 
 ```
-Route::post('comments', '\Laravelista\Comments\CommentController@store')->name('comments.store');
-Route::delete('comments/{comment}', '\Laravelista\Comments\CommentController@destroy')->name('comments.destroy');
-Route::put('comments/{comment}', '\Laravelista\Comments\CommentController@update')->name('comments.update');
-Route::post('comments/{comment}', '\Laravelista\Comments\CommentController@reply')->name('comments.reply');
+Route::post('comments', '\Laravelista\Comments\Comments\CommentController@store')->name('comments.store');
+Route::delete('comments/{comment}', '\Laravelista\Comments\Comments\CommentController@destroy')->name('comments.destroy');
+Route::put('comments/{comment}', '\Laravelista\Comments\Comments\CommentController@update')->name('comments.update');
+Route::post('comments/{comment}', '\Laravelista\Comments\Comments\CommentController@reply')->name('comments.reply');
 ```
 
 

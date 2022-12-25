@@ -1,8 +1,8 @@
 <?php
 
-namespace Laravelista\Comments;
+namespace Laravelista\Comments\Comments;
 
-use Laravelista\Comments\Comment;
+use Laravelista\Comments\Comments;
 
 class CommentPolicy
 {
@@ -21,10 +21,10 @@ class CommentPolicy
      * Can user delete the comment
      *
      * @param $user
-     * @param Comment $comment
+     * @param \Laravelista\Comments\Comments\Comment $comment
      * @return bool
      */
-    public function delete($user, Comment $comment) : bool
+    public function delete($user, Comments\Comment $comment) : bool
     {
         return $user->getKey() == $comment->commenter_id;
     }
@@ -33,10 +33,10 @@ class CommentPolicy
      * Can user update the comment
      *
      * @param $user
-     * @param Comment $comment
+     * @param \Laravelista\Comments\Comments\Comment $comment
      * @return bool
      */
-    public function update($user, Comment $comment) : bool
+    public function update($user, Comments\Comment $comment) : bool
     {
         return $user->getKey() == $comment->commenter_id;
     }
@@ -45,10 +45,10 @@ class CommentPolicy
      * Can user reply to the comment
      *
      * @param $user
-     * @param Comment $comment
+     * @param \Laravelista\Comments\Comments\Comment $comment
      * @return bool
      */
-    public function reply($user, Comment $comment) : bool
+    public function reply($user, Comments\Comment $comment) : bool
     {
         return $user->getKey() != $comment->commenter_id;
     }

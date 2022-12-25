@@ -1,10 +1,8 @@
 <?php
 
-namespace Laravelista\Comments;
+namespace Laravelista\Comments\Comments;
 
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Config;
-use Spatie\Honeypot\ProtectAgainstSpam;
 
 abstract class CommentController extends Controller implements CommentControllerInterface
 {

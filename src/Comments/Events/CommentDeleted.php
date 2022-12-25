@@ -1,9 +1,9 @@
 <?php
 
-namespace Laravelista\Comments\Events;
+namespace Laravelista\Comments\Comments\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Laravelista\Comments\Comment;
+use Laravelista\Comments\Comments\Comment;
 
 class CommentDeleted
 {

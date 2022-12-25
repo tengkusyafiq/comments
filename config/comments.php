@@ -14,24 +14,24 @@ return [
      * CustomComment model extending the Comment model shipped with the
      * package and change this configuration option to their extended model.
      */
-    'model' => \Laravelista\Comments\Comment::class,
+    'model' => \Laravelista\Comments\Comments\Comment::class,
 
     /**
      * You can customize the behaviour of these permissions by
      * creating your own and pointing to it here.
      */
     'permissions' => [
-        'create-comment' => 'Laravelista\Comments\CommentPolicy@create',
-        'delete-comment' => 'Laravelista\Comments\CommentPolicy@delete',
-        'edit-comment' => 'Laravelista\Comments\CommentPolicy@update',
-        'reply-to-comment' => 'Laravelista\Comments\CommentPolicy@reply',
+        'create-comment' => 'Laravelista\Comments\Comments\CommentPolicy@create',
+        'delete-comment' => 'Laravelista\Comments\Comments\CommentPolicy@delete',
+        'edit-comment' => 'Laravelista\Comments\Comments\CommentPolicy@update',
+        'reply-to-comment' => 'Laravelista\Comments\Comments\CommentPolicy@reply',
     ],
 
     /**
      * The Comment Controller.
      * Change this to your own implementation of the CommentController.
-     * You can use the \Laravelista\Comments\CommentControllerInterface
-     * or extend the \Laravelista\Comments\CommentController.
+     * You can use the \Laravelista\Comments\Comments\CommentControllerInterface
+     * or extend the \Laravelista\Comments\Comments\CommentController.
      */
     'controller' => '\Laravelista\Comments\WebCommentController',
 

@@ -1,13 +1,15 @@
 <?php
 
-namespace Laravelista\Comments;
+namespace Laravelista\Comments\Comments;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravelista\Comments\Events\CommentCreated;
-use Laravelista\Comments\Events\CommentUpdated;
-use Laravelista\Comments\Events\CommentDeleted;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Config;
+use Laravelista\Comments\Comments\Events\CommentCreated;
+use Laravelista\Comments\Comments\Events\CommentDeleted;
+use Laravelista\Comments\Comments\Events\CommentUpdated;
+use Laravelista\Comments\Files\File;
 
 class Comment extends Model
 {
@@ -28,7 +30,8 @@ class Comment extends Model
      * @var array
      */
     protected $fillable = [
-        'comment', 'approved', 'guest_name', 'guest_email'
+        'comment', 'approved', 'guest_name', 'guest_email',
+        'tenant_id', // for multi tenant and indexing.
     ];
 
     /**
@@ -48,7 +51,7 @@ class Comment extends Model
     protected $dispatchesEvents = [
         'created' => CommentCreated::class,
         'updated' => CommentUpdated::class,
-        'deleted' => CommentDeleted::class,
+        'deleted' => CommentDeleted::class, // TODO: also delete files in the files table and file manager.
     ];
 
     /**
@@ -81,5 +84,13 @@ class Comment extends Model
     public function parent()
     {
         return $this->belongsTo(Config::get('comments.model'), 'child_id');
+    }
+
+    /**
+     * Returns all files that this comment is the parent of.
+     */
+    public function files(): HasMany
+    {
+        return $this->hasMany(File::class, 'comment_id');
     }
 }
