@@ -47,7 +47,9 @@ class FileService
         // }
 
         // save files
-        $comment->files()->createMany($request->only('files'));
+        if ($request->has('files')) {
+            $comment->files()->createMany($request->only('files'));
+        }
 
         return $comment;
     }
