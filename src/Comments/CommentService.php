@@ -7,47 +7,29 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Laravelista\Comments\Files\FileService;
 
 class CommentService
 {
     /**
      * Handles creating a new comment for given model.
      * @return mixed the configured comment-model
+     * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): mixed
     {
-//        // If guest commenting is turned off, authorize this action.
-//        if (Config::get('comments.guest_commenting') == false) {
-//            Gate::authorize('create-comment', Comment::class);
-//        }
-//
-//        // Define guest rules if user is not logged in.
-//        if (!Auth::check()) {
-//            $guest_rules = [
-//                'guest_name' => 'required|string|max:255',
-//                'guest_email' => 'required|string|email|max:255',
-//            ];
-//        }
-        $guest_rules = null;
-
-        // Merge guest rules, if any, with normal validation rules.
-        Validator::make($request->all(), array_merge($guest_rules ?? [], [
-            'commentable_type' => 'required|string',
-            'commentable_id' => 'required|string|min:1',
-            'message' => 'required|string'
-        ]))->validate();
+        Validator::make($request->all(), [
+            'message' => ['required', 'string'],
+            'commentable_id' => ['required', 'string', 'min:1'],
+            'commentable_type' => ['required', 'string'],
+        ])->validate();
 
         $model = $request->commentable_type::findOrFail($request->commentable_id);
 
         $commentClass = Config::get('comments.model');
         $comment = new $commentClass;
 
-//        if (!Auth::check()) {
-//            $comment->guest_name = $request->guest_name;
-//            $comment->guest_email = $request->guest_email;
-//        } else {
-//            $comment->commenter()->associate(Auth::user());
-//        }
         $comment->commenter()->associate(Auth::user());
 
         $comment->commentable()->associate($model);
@@ -55,35 +37,50 @@ class CommentService
         $comment->approved = !Config::get('comments.approval_required');
         $comment->save();
 
+        // save files
+        if ($request->has('files')) {
+            $comment = (new FileService)->store($request, $comment);
+        }
+
         return $comment;
     }
 
     /**
      * Handles updating the message of the comment.
      * @return mixed the configured comment-model
+     * @throws ValidationException
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment): mixed
     {
         Gate::authorize('edit-comment', $comment);
 
         Validator::make($request->all(), [
-            'message' => 'required|string'
+            'message' => ['required', 'string'],
         ])->validate();
 
         $comment->update([
             'comment' => $request->message
         ]);
 
+        // update files
+        if ($request->has('store_files') || $request->has('destroy_files')) {
+            $comment = (new FileService)->update($request, $comment);
+        }
+
         return $comment;
     }
 
     /**
      * Handles deleting a comment.
-     * @return mixed the configured comment-model
+     * @param Comment $comment
+     * @return void the configured comment-model
      */
     public function destroy(Comment $comment): void
     {
         Gate::authorize('delete-comment', $comment);
+
+        // delete files
+        (new FileService)->destroyAll($comment->files);
 
         if (Config::get('comments.soft_deletes') == true) {
             $comment->delete();
@@ -95,13 +92,14 @@ class CommentService
     /**
      * Handles creating a reply "comment" to a comment.
      * @return mixed the configured comment-model
+     * @throws ValidationException
      */
-    public function reply(Request $request, Comment $comment)
+    public function reply(Request $request, Comment $comment): mixed
     {
         Gate::authorize('reply-to-comment', $comment);
 
         Validator::make($request->all(), [
-            'message' => 'required|string'
+            'message' => ['required', 'string'],
         ])->validate();
 
         $commentClass = Config::get('comments.model');
@@ -112,6 +110,11 @@ class CommentService
         $reply->comment = $request->message;
         $reply->approved = !Config::get('comments.approval_required');
         $reply->save();
+
+        // save files
+        if ($request->has('files')) {
+            $reply = (new FileService)->store($request, $reply);
+        }
 
         return $reply;
     }

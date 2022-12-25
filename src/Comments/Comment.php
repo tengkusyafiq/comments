@@ -51,7 +51,7 @@ class Comment extends Model
     protected $dispatchesEvents = [
         'created' => CommentCreated::class,
         'updated' => CommentUpdated::class,
-        'deleted' => CommentDeleted::class, // TODO: also delete files in the files table and file manager.
+        'deleted' => CommentDeleted::class,
     ];
 
     /**
