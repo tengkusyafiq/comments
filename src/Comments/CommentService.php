@@ -80,7 +80,9 @@ class CommentService
         Gate::authorize('delete-comment', $comment);
 
         // delete files
-        (new FileService)->destroyAll($comment->files);
+        if ($files = $comment->files) {
+            (new FileService)->destroyAll($comment->files);
+        }
 
         if (Config::get('comments.soft_deletes') == true) {
             $comment->delete();

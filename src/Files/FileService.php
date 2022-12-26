@@ -47,8 +47,8 @@ class FileService
         // }
 
         // save files
-        if ($request->has('files')) {
-            $comment->files()->createMany($request->only('files'));
+        if ($files = $request->input('files')) {
+            $comment->files()->createMany($files);
         }
 
         return $comment;
@@ -96,13 +96,14 @@ class FileService
         // }
 
         // save new files
-        if ($request->has('store_files')) {
-            $comment->files()->createMany($request->only('store_files'));
+        // save files
+        if ($files = $request->input('store_files')) {
+            $comment->files()->createMany($files);
         }
 
         // destroy files
-        if ($request->has('destroy_files')) {
-            $comment->files()->whereIn('id', $request->only('destroy_files'))->delete();
+        if ($files = $request->input('destroy_files')) {
+            $comment->files()->whereIn('id', $files)->delete();
         }
 
         return $comment;
@@ -113,7 +114,6 @@ class FileService
      */
     public function destroy(File $file): ?bool
     {
-        Gate::authorize('edit-comment', $file);
         try {
             // TODO: to connect to vimigo file manager service and request delete the file asset
         } catch (\Exception $e) {
@@ -134,5 +134,4 @@ class FileService
         }
         return true;
     }
-
 }
