@@ -33,7 +33,7 @@ class CommentService
         $comment->commenter()->associate(Auth::user());
 
         $comment->commentable()->associate($model);
-        $comment->comment = $request->message;
+        $comment->comment = $request->message ?? '';
         $comment->approved = !Config::get('comments.approval_required');
         $comment->save();
 
