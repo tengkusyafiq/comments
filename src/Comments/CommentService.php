@@ -20,7 +20,7 @@ class CommentService
     public function store(Request $request): mixed
     {
         Validator::make($request->all(), [
-            'message' => ['required', 'string'],
+            'message' => ['string'],
             'commentable_id' => ['required', 'string', 'min:1'],
             'commentable_type' => ['required', 'string'],
         ])->validate();
@@ -55,7 +55,7 @@ class CommentService
         Gate::authorize('edit-comment', $comment);
 
         Validator::make($request->all(), [
-            'message' => ['required', 'string'],
+            'message' => ['string'],
         ])->validate();
 
         $comment->update([
@@ -101,7 +101,7 @@ class CommentService
         Gate::authorize('reply-to-comment', $comment);
 
         Validator::make($request->all(), [
-            'message' => ['required', 'string'],
+            'message' => ['string'],
         ])->validate();
 
         $commentClass = Config::get('comments.model');
